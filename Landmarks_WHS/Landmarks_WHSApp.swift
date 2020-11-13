@@ -11,7 +11,7 @@ import SwiftUI
 struct Landmarks_WHSApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LandmarksList()
         }
     }
 }
