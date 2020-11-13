@@ -8,11 +8,26 @@
 import SwiftUI
 
 struct LandmarkList: View {
+    @EnvironmentObject var userData: UserData
+    var landmark: Landmark
+    
+    var landmarkIndex: Int {
+        userData.landmarks.firstIndex(where: { $0.id == landmark.id })!
+    }
+    
     var body: some View {
         NavigationView {
-            List(landmarkData) { landmark in
-                NavigationLink(destination: LandmarkDetail(landmark: landmark)) {
-                    LandmarkRow(landmark: landmark)
+            List {
+                Toggle(isOn: $userData.showFavoritesOnly) {
+                    Text("Favorites only")
+                }
+
+                ForEach(landmarkData) { landmark in
+                    if !self.userData.showFavoritesOnly || landmark.isFavorite {
+                        NavigationLink(destination: LandmarkDetail(landmark: landmark)) {
+                            LandmarkRow(landmark: landmark)
+                        }
+                    }
                 }
             }
             .navigationBarTitle(Text("Landmarks"))
@@ -20,9 +35,9 @@ struct LandmarkList: View {
     }
 }
 
-struct LandmarkList_Previews: PreviewProvider {
+struct LandmarkDetail_Previews: PreviewProvider {
     static var previews: some View {
-        LandmarkList()
-            .previewDevice(PreviewDevice(rawValue: "iPhone SE (2nd generation" ))
+        LandmarkDetail(landmark: landmarkData[0])
+            .environmentObject(UserData())
     }
 }
